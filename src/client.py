@@ -10,14 +10,20 @@ except IndexError:
     url = 'http://localhost:8888/'
 
 pos = 0
+timeout = 20
 
 while True:
     try:
-        resp = client.fetch(url + str(pos))
+        resp = client.fetch(url + str(pos), request_timeout=timeout)
         d = decode(resp.body)
         pos = d['pointer']
         line = d['text']
         print(line.rstrip('\n'))
     except HTTPError as e:
-        print(e)
+        #print(e)
+        if not 'imeout' in str(e):
+            print(e)
+            break
+    except KeyboardInterrupt:
+        print('Closed by user')
         break
